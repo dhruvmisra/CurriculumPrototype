@@ -6,11 +6,13 @@
     <button class="btn border m-2 mr-auto" :class="{ on: settingsOpen }" @click="$emit('settingsClicked')">
       <i class="fas fa-cog" :class="{ 'text-white': !settingsOpen }"></i>
     </button>
+    <span class="text-white"> {{ settingsOpen ? 'Close' : 'Open' }} settings mode</span>
     <h3 class="text-center text-white m-3">{{ category.title }}</h3>
     <div class="search mx-5 my-3">
       <label for="search" class="text-white">Try searching a skill</label>
       <input id="search" type="text" class="form-control" placeholder="Search" v-model="query" />
     </div>
+    <p class="text-center text-white">{{ settingsOpen ? 'Drag and drop skills to re-order. Try adding a category/skill.' : 'Try clicking a skill and adding an achievement image/audio' }}</p>
     <draggable v-model="category.skills" :disabled="!settingsOpen">
       <transition-group class="skill-grid" name="grid" mode="out-in">
         <div

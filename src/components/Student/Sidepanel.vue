@@ -15,8 +15,8 @@
       <img :src="getImage(student.image)" alt="profile-photo" class="profile-photo w-100">
       <p class="text-center">{{ student.name }}</p>
 
+      <p class="text-center my-0"> <i class="fas fa-folder text-primary"></i> {{ documents.length }} docuements</p>
       <div class="documents">
-        <p class="text-center">{{ documents.length }} docuements</p>
         <div v-for="(doc, i) in documents" :key="i">
           <img :src="doc" alt="doc" v-if="doc[0] == 'd'" class="w-100">
           <audio :src="doc" v-if="doc[0] == 'b'" controls class="upload-audio w-100"></audio>
