@@ -2,7 +2,6 @@
   <div id="home">
     <div class="views">
       <h5>Select View</h5>
-      <button class="btn border" @click="$emit('goTo', 'Teacher')">Teacher's view</button>
       <button class="btn border" @click="$emit('goTo', 'Student')">Student's view</button>
       <button class="btn border" @click="$emit('goTo', 'Classroom')">Classroom view</button>
     </div>
