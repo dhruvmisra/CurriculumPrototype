@@ -7,6 +7,7 @@
       @goTo="goTo"
       @goBack="goBack"
       @updateCategories="updateCategories"
+      @addSkill="addSkill"
       @addCategory="addCategory"
     ></component>
   </div>
@@ -206,8 +207,21 @@ export default {
     updateCategories(categories) {
       this.categories = categories;
     },
+    addSkill(skill, selectedCategory) {
+      this.categories[selectedCategory].skills.push(skill);
+      for(let student in this.students) {
+        this.$set(this.students[student].acquired[selectedCategory], skill.id, {
+          acquired: false,
+          image: null,
+          audio: null
+        })
+      }
+    },
     addCategory(cat) {
       this.categories.push(cat);
+      for(let student in this.students) {
+        this.$set(this.students[student].acquired, cat.id, {})
+      }
     }
   }
 };

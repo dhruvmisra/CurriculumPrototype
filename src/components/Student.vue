@@ -59,7 +59,7 @@ export default {
       this.$emit("addCategory", cat);
     },
     addSkill(skill) {
-      this.categories[this.selectedCategory].skills.push(skill);
+      this.$emit('addSkill', skill, this.selectedCategory);
     }
   }
 };

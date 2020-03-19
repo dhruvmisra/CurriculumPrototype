@@ -25,7 +25,7 @@
         >
           <p class="text-center">{{ skill.title }}</p>
           <img :src="getImage(skill.image, i)" v-if="skill.image != ''" alt="skill-image" class="w-100">
-          <i class="fas fa-thumbs-up" v-if="student.acquired[category.id][i].acquired"></i>
+          <i class="fas fa-thumbs-up" v-if="student.acquired[category.id] && student.acquired[category.id][i].acquired"></i>
         </div>
       </transition-group>
     </draggable>
@@ -55,7 +55,7 @@
               <!-- <label>Acquire Skill? <input type="checkbox" @change="skillChange($event, category.skills[selectedSkill].id)"></label> -->
               <label>Acquire Skill? <input type="checkbox" v-model="skillAcquired"></label>
             </div>
-            <div class="uploads" v-if="student.acquired[category.id][selectedSkill].image != null || student.acquired[category.id][selectedSkill].audio != null">
+            <div class="uploads" v-if="student.acquired[category.id] && student.acquired[category.id][selectedSkill] && (student.acquired[category.id][selectedSkill].image != null || student.acquired[category.id][selectedSkill].audio != null)">
               <img :src="student.acquired[category.id][selectedSkill].image" v-if="student.acquired[category.id][selectedSkill].image != null" class="upload-image w-100">
               <audio id="player" :src="student.acquired[category.id][selectedSkill].audio" v-if="student.acquired[category.id][selectedSkill].audio != null" controls class="upload-audio w-100"></audio>
             </div>
@@ -65,7 +65,6 @@
               type="file"
               accept="image/*"
               class="form-control"
-              :disabled="audioFile != null"
               @change="onImageChange"
             />
             <label for="audio">Audio</label>
@@ -75,7 +74,6 @@
               accept="audio/*"
               capture
               class="form-control"
-              :disabled="imageFile != null"
               @change="onAudioChange"
             />
           </div>
@@ -195,10 +193,12 @@ export default {
     },
     selectSkill(i) {
       this.selectedSkill = i;
-      if(typeof this.student.acquired[this.category.id][i] == 'undefined') {
+      if(this.student.acquired[this.category.id]) {
+        if(typeof this.student.acquired[this.category.id][i] == 'undefined') {
         this.skillAcquired = false;
-      } else {
-        this.skillAcquired = this.student.acquired[this.category.id][i].acquired;
+        } else {
+          this.skillAcquired = this.student.acquired[this.category.id][i].acquired;
+        }
       }
     },
     addAchievement() {
@@ -253,6 +253,7 @@ export default {
   position: relative;
   width: 200px;
   height: 250px;
+  overflow-y: hidden;
   padding: 1em;
   border-radius: 5px;
   background: white;

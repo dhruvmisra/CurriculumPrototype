@@ -82,7 +82,11 @@ export default {
   },
   methods: {
     getImage(image, folder) {
-      return require("@/assets/" + folder + "/" + image);
+      if(image.indexOf('data:image') != -1) {
+        return image;
+      } else {
+        return require("@/assets/" + folder + "/" + image);
+      }
     },
     generatePDF(i) {
       this.selectedStudent = i;
@@ -165,6 +169,7 @@ export default {
 }
 .skill-image {
   width: 200px;
+  padding: 10px;
 }
 .uploaded {
   display: flex;
