@@ -2,6 +2,7 @@
   <div id="student">
     <Sidebar
       :categories="categories"
+      :sortable="catSortable"
       @update="updateCategories"
       @select="selectCategory"
       @categoryAdded="addCategory"
@@ -11,13 +12,12 @@
     <Skills
       :category="categories.find(e => e.id == selectedCategory)"
       :settingsOpen="settingsOpen"
-      :student="students[0]"
+      :student="student"
       @skillAdded="addSkill"
-      @settingsClicked="settingsOpen = !settingsOpen"
       @goBack="$emit('goBack')"
     />
     <Sidepanel
-      :student="students[0]"
+      :student="student"
       :categories="categories"
       :selectedCategory="selectedCategory"
       @select="selectCategory"
@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import Sidebar from "./Student/Sidebar";
-import Sidepanel from "./Student/Sidepanel";
-import Skills from "./Student/Skills";
+import Sidebar from "./Sidebar";
+import Sidepanel from "./Sidepanel";
+import Skills from "./Skills";
 
 export default {
   name: "Student",
@@ -40,12 +40,13 @@ export default {
   },
   props: {
     categories: Array,
-    students: Array
+    student: Object,
+    settingsOpen: Boolean,
+    catSortable: Boolean
   },
   data() {
     return {
-      selectedCategory: 0,
-      settingsOpen: false
+      selectedCategory: 0
     };
   },
   methods: {
@@ -67,6 +68,7 @@ export default {
 
 <style>
 #student {
+  height: calc(100vh - 55px);
   display: flex;
 }
 </style>

@@ -1,23 +1,11 @@
 <template>
   <div class="sidebar border shadow">
     <div class="header row mx-0 align-items-center">
-      <div class="mr-auto">
-        <button class="btn border m-1" @click="$emit('goBack')">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="btn border m-1" data-toggle="modal" data-target="#addCategory">
-          <i class="fas fa-plus"></i>
-        </button>
-      </div>
       <h6 class="text-center my-3 text-secondary mx-auto">Categories</h6>
-      <button class="btn border m-2 ml-auto" :class="{ 'sortable': sortable }" @click="sortable = !sortable">
-         <i class="fas fa-sort-size-down-alt"></i>
-      </button>
     </div>
-    <p class="text-muted text-center" style="font-size: 12px">(Press the button on the right to re-order)</p>
     <draggable v-model="cat" @update="onUpdate" :disabled="!sortable">
       <transition-group name="list">
-        <div class="item border p-3" v-for="(category, i) in cat" :key="category.id" @click="$emit('select', category.id)">
+        <div class="item p-3" :style="{ borderLeft: 'solid 15px ' + category.bg }" v-for="(category, i) in cat" :key="category.id" @click="$emit('select', category.id)">
           {{ category.title }}
           <i class="fas fa-grip-lines text-muted ml-auto" v-if="sortable"></i>
         </div>
@@ -57,12 +45,12 @@ export default {
     draggable,
   },
   props: {
-    categories: Array
+    categories: Array,
+    sortable: Boolean
   },
   data() {
     return {
       cat: [],
-      sortable: false,
       categoryTitle: '',
       categoryBg: ''
     }
@@ -91,10 +79,11 @@ export default {
 <style>
 .sidebar {
   width: 300px;
-  height: 100vh;
+  height: 100%;
 }
 .item {
   display: flex;
+  border: 1px solid #dee2e6;
   cursor: pointer;
 }
 .list-enter-active, .list-leave-active {
@@ -106,8 +95,5 @@ export default {
 }
 .list-move {
   transition: transform 200ms;
-}
-.sortable {
-  background: rgb(221, 221, 221) !important;
 }
 </style>

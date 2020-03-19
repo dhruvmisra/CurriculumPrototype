@@ -1,12 +1,7 @@
 <template>
-  <div class="classroom">
-    <button class="btn border m-2 mr-auto" @click="$emit('goBack')">
-      <i class="fas fa-chevron-left text-white"></i>
-    </button>
-    <h1 class="text-center text-white">Classroom</h1>
-    <p class="text-center">Click on any student to generate a PDF report for their acquired skills. <br> (You are the first student [ABC] in Student View)</p>
-    <form class="row justify-content-center mx-0">
-      <p class="text-center mx-3">Export as:</p>
+  <div class="generate">
+    <form class="export-form row justify-content-center mx-0">
+      <p class="text-center mx-3 my-0">Export as:</p>
       <div class="form-check px-3">
         <input class="form-check-input" type="radio" id="pdfRadio" value="pdf" v-model="output">
         <label class="form-check-label" for="pdfRadio">
@@ -20,29 +15,18 @@
         </label>
       </div>      
     </form> 
-    <div class="students">
-      <div
-        class="student"
-        v-for="(student, i) in students"
-        :key="student.rollNo"
-        @click="generate(i)"
-      >
-        <img :src="getImage(student.image, 'students')" alt />
-        <p class="text-center">{{ student.name }}</p>
-      </div>
-    </div>
 
     <div class="doc-container">
       <div id="doc" class="mt-2">
         <div class="profile mx-auto" style="text-align: center">
-          <h1 class="mt-5 pt-5">{{ students[selectedStudent].name }}</h1>
+          <h1 class="mt-5 pt-5">{{ student.name }}</h1>
           <img
-            :src="getImage(students[selectedStudent].image, 'students')"
+            src="../assets/icons/owner-icon.svg"
             class="profile-photo d-block mx-auto"
           />
-          <h5 class="my-3">Roll Number: {{ students[selectedStudent].rollNo }}</h5>
+          <h5 class="my-3">Roll Number: {{ student.rollNo }}</h5>
           <h5 class="my-3">Class: My Class</h5>
-          <h5 class="my-3">Age: {{ students[selectedStudent].age }}</h5>
+          <h5 class="my-3">Age: {{ student.age }}</h5>
         </div>
 
         <hr class="my-5" />
@@ -62,13 +46,13 @@
                     <h6>{{ skill.title }}</h6>
                     <h5
                       style="margin-left: auto"
-                      :class="{ 'text-success': students[selectedStudent].acquired[category.id][skill.id].acquired, 
-                                'text-danger': !students[selectedStudent].acquired[category.id][skill.id].acquired }"
-                    >{{ students[selectedStudent].acquired[category.id][skill.id].acquired ? 'Acquired' : 'Not Acquired' }}</h5>
+                      :class="{ 'text-success': student.acquired[category.id][skill.id].acquired, 
+                                'text-danger': !student.acquired[category.id][skill.id].acquired }"
+                    >{{ student.acquired[category.id][skill.id].acquired ? 'Acquired' : 'Not Acquired' }}</h5>
                   </div>
-                  <div class="uploaded" v-if="students[selectedStudent].acquired[category.id][skill.id].image != null || students[selectedStudent].acquired[category.id][skill.id].audio != null">
-                    <img :src="students[selectedStudent].acquired[category.id][skill.id].image" v-if="students[selectedStudent].acquired[category.id][skill.id].image != null">
-                    <div v-if="students[selectedStudent].acquired[category.id][skill.id].audio != null" class="m-5">[Audio added]</div>
+                  <div class="uploaded" v-if="student.acquired[category.id][skill.id].image != null || student.acquired[category.id][skill.id].audio != null">
+                    <img :src="student.acquired[category.id][skill.id].image" v-if="student.acquired[category.id][skill.id].image != null">
+                    <div v-if="student.acquired[category.id][skill.id].audio != null" class="m-5">[Audio added]</div>
                   </div>
                 </div>
               </div>
@@ -86,7 +70,7 @@ import html2canvas from 'html2canvas';
 
 export default {
   props: {
-    students: Array,
+    student: Object,
     categories: Array
   },
   data() {
@@ -103,18 +87,16 @@ export default {
         return require("@/assets/" + folder + "/" + image);
       }
     },
-    generate(i) {
+    generate() {
       if(this.output == 'pdf') {
-        this.generatePDF(i);
+        this.generatePDF();
       } else {
-        this.generateDoc(i);
+        this.generateDoc();
       }
     },
-    generateDoc(i) {
-      this.selectedStudent = i;
-
+    generateDoc() {
       let vm = this;
-      let filename = "skills-" + this.students[i].name;
+      let filename = "skills-" + this.student.name;
       let element = "doc";
 
       setTimeout(() => {
@@ -146,9 +128,7 @@ export default {
         document.body.removeChild(downloadLink);
       }, 500);
     },
-    generatePDF(i) {
-      this.selectedStudent = i;
-
+    generatePDF() {
       let vm = this;
       
       setTimeout(() => {
@@ -178,7 +158,7 @@ export default {
             pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
           }
           
-          pdf.save("Skills-" + vm.students[vm.selectedStudent].name + ".pdf");
+          pdf.save("Skills-" + vm.student.name + ".pdf");
         });
       }, 500);
     }
@@ -187,12 +167,6 @@ export default {
 </script>
 
 <style>
-.classroom {
-  background: rgb(91, 181, 241);
-  color: white;
-  min-height: 100vh;
-}
-
 .students {
   display: flex;
   flex-wrap: wrap;
@@ -237,5 +211,11 @@ export default {
 .uploaded img {
   width: 200px;
   margin: 20px;
+}
+.export-form {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: white;
 }
 </style>

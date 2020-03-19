@@ -1,18 +1,15 @@
 <template>
   <div id="skills" :style="{ background: category.bg }">
-    <button class="btn border m-2 mr-auto" @click="$emit('goBack')">
+    <!-- <button class="btn border m-2 mr-auto" @click="$emit('goBack')">
       <i class="fas fa-chevron-left text-white"></i>
-    </button>
-    <button class="btn border m-2 mr-auto" :class="{ on: settingsOpen }" @click="$emit('settingsClicked')">
+    </button> -->
+    <!-- <button class="btn border m-2 mr-auto" :class="{ on: settingsOpen }" @click="$emit('settingsClicked')">
       <i class="fas fa-cog" :class="{ 'text-white': !settingsOpen }"></i>
-    </button>
-    <span class="text-white"> {{ settingsOpen ? 'Close' : 'Open' }} settings mode</span>
+    </button> -->
     <h3 class="text-center text-white m-3">{{ category.title }}</h3>
     <div class="search mx-5 my-3">
-      <label for="search" class="text-white">Try searching a skill</label>
       <input id="search" type="text" class="form-control" placeholder="Search" v-model="query" />
     </div>
-    <p class="text-center text-white">{{ settingsOpen ? 'Drag and drop skills to re-order. Try adding a category/skill.' : 'Try clicking a skill and adding an achievement image/audio' }}</p>
     <draggable v-model="category.skills" :disabled="!settingsOpen">
       <transition-group class="skill-grid" name="grid" mode="out-in">
         <div
@@ -21,11 +18,11 @@
           :key="skill.title"
           data-toggle="modal"
           :data-target="settingsOpen ? '' : '#addAchievement'"
-          @click="selectSkill(i)"
+          @click="selectSkill(skill.id)"
         >
           <p class="text-center">{{ skill.title }}</p>
           <img :src="getImage(skill.image, i)" v-if="skill.image != ''" alt="skill-image" class="w-100">
-          <i class="fas fa-thumbs-up" v-if="student.acquired[category.id] && student.acquired[category.id][i].acquired"></i>
+          <i class="fas fa-thumbs-up" v-if="student.acquired[category.id] && student.acquired[category.id][skill.id].acquired"></i>
         </div>
       </transition-group>
     </draggable>
@@ -144,7 +141,7 @@ export default {
   },
   watch: {
     category: function(newVal, oldVal) {
-      this.selectedSkill = 0;
+      this.selectedSkill = newVal.skills[0].id;
     },
     settingsOpen: function(newVal, oldVal) {
       this.imageFile = null;
@@ -240,8 +237,8 @@ export default {
 <style>
 #skills {
   background: #4ac1f6;
-  width: calc(100% - 400px);
-  height: 100vh;
+  width: calc(100% - 200px);
+  height: 100%;
   overflow-y: auto;
 }
 .skill-grid {

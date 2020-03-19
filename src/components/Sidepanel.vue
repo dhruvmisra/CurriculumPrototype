@@ -8,18 +8,20 @@
         v-for="(category, i) in categories"
         :key="category.title"
         @click="$emit('select', category.id)"
-      ></div>
+      >
+        <i class="far fa-book-open"></i>
+      </div>
     </div>
 
     <div class="profile">
-      <img :src="getImage(student.image)" alt="profile-photo" class="profile-photo w-100">
-      <p class="text-center">{{ student.name }}</p>
+      <img src="../assets/icons/owner-icon.svg" alt="profile-photo" class="profile-photo w-100">
 
-      <p class="text-center my-0"> <i class="fas fa-folder text-primary"></i> {{ documents.length }} docuements</p>
+      <p class="text-center my-0"> <i class="fas fa-folder text-primary" style="font-size: 20px"></i> {{ documents.length }}</p>
       <div class="documents">
-        <div v-for="(doc, i) in documents" :key="i">
-          <img :src="doc" alt="doc" v-if="doc[0] == 'd'" class="w-100">
-          <audio :src="doc" v-if="doc[0] == 'b'" controls class="upload-audio w-100"></audio>
+        <div class="border" v-for="(doc, i) in documents" :key="i">
+          <img :src="doc" alt="doc" v-if="doc[0] == 'd'" class="w-50">
+          <audio :src="doc" v-if="doc[0] == 'b'" controls class="upload-audio w-50"></audio>
+          <span style="font-size:10px">[Upload Time]</span>
         </div>
       </div>
     </div>
@@ -60,23 +62,15 @@ export default {
     }
   },
   methods: {
-    getImage(image, i) {
-      // if(this.student.acquired[this.category.id][i].image != null) {
-      //   return this.student.acquired[this.category.id][i].image;
-      // } else if(image.indexOf('data:image') != -1) {
-      //   return image;
-      // } else {
-      //   }
-      return require("@/assets/students/" + image);
-    },
+
   }
 };
 </script>
 
 <style>
 .sidepanel {
-  width: 400px;
-  height: 100vh;
+  width: 250px;
+  height: 100%;
   display: flex;
 }
 .category-boxes {
@@ -89,6 +83,9 @@ export default {
 .category-box {
   height: 100%;
   width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 }
 .category-box:hover {
@@ -107,7 +104,7 @@ export default {
 }
 .documents {
   padding:10px;
-  height: 45vh;
+  height: 60vh;
   overflow-y: auto;
 }
 .documents img {

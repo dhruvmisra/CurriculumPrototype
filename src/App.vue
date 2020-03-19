@@ -1,33 +1,45 @@
 <template>
   <div id="app">
-    <component
-      :is="currentComponent"
+    <Toolbar
+      :settingsOpen="settingsOpen"
+      :catSortable="catSortable"
+      @settingsClicked="settingsClicked"
+      @reorderClicked="reorderClicked"
+      @downloadClicked="downloadClicked"
+       />
+    <Student
       :categories="categories"
-      :students="students"
-      @goTo="goTo"
-      @goBack="goBack"
+      :student="student"
+      :settingsOpen="settingsOpen"
+      :catSortable="catSortable"
       @updateCategories="updateCategories"
       @addSkill="addSkill"
-      @addCategory="addCategory"
-    ></component>
+      @addCategory="addCategory" 
+    />
+    <Generate 
+      ref="generate"
+      :student="student"
+      :categories="categories"
+    />
   </div>
 </template>
 
 <script>
-import Home from "./components/Home";
+import Toolbar from './components/Toolbar/Toolbar'
 import Student from "./components/Student";
-import Classroom from "./components/Classroom";
+import Generate from "./components/Generate";
 
 export default {
   name: "App",
   components: {
-    Home,
     Student,
-    Classroom
+    Toolbar,
+    Generate
   },
   data() {
     return {
-      currentComponent: "Home",
+      settingsOpen: false,
+      catSortable: false,
       categories: [
         {
           id: 0,
@@ -76,152 +88,70 @@ export default {
           ]
         }
       ],
-      students: [
-        {
-          name: 'ABC',
-          age: 10,
-          rollNo: 0,
-          image: 's1.jpg',
-          acquired: {
+      student: {
+        name: 'ABC',
+        age: 10,
+        rollNo: 0,
+        acquired: {
+          0: {
             0: {
-              0: {
-                acquired: true,
-                image: null,
-                audio: null
-              },
-              1: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
+              acquired: true,
+              image: null,
+              audio: null
             },
             1: {
-              0: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
+              acquired: false,
+              image: null,
+              audio: null
             },
-            2: {
-              0: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
-              1: {
-                acquired: true,
-                image: null,
-                audio: null
-              },
-            }
-          }
-        },
-        {
-          name: 'DEF',
-          age: 10,
-          rollNo: 1,
-          image: 's2.jpg',
-          acquired: {
+          },
+          1: {
             0: {
-              0: {
-                acquired: true,
-                image: null,
-                audio: null
-              },
-              1: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
+              acquired: false,
+              image: null,
+              audio: null
+            },
+          },
+          2: {
+            0: {
+              acquired: false,
+              image: null,
+              audio: null
             },
             1: {
-              0: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
+              acquired: true,
+              image: null,
+              audio: null
             },
-            2: {
-              0: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
-              1: {
-                acquired: true,
-                image: null,
-                audio: null
-              },
-            }
           }
-        },
-        {
-          name: 'GHI',
-          age: 10,
-          rollNo: 2,
-          image: 's3.jpg',
-          acquired: {
-            0: {
-              0: {
-                acquired: true,
-                image: null,
-                audio: null
-              },
-              1: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
-            },
-            1: {
-              0: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
-            },
-            2: {
-              0: {
-                acquired: false,
-                image: null,
-                audio: null
-              },
-              1: {
-                acquired: true,
-                image: null,
-                audio: null
-              },
-            }
-          }
-        },
-      ]
+        }
+      },
     };
   },
   methods: {
-    goTo(view) {
-      this.currentComponent = view;
+    settingsClicked() {
+      this.settingsOpen = !this.settingsOpen;
     },
-    goBack() {
-      this.currentComponent = "Home";
+    reorderClicked() {
+      this.catSortable = !this.catSortable;
+    },
+    downloadClicked() {
+      this.$refs.generate.generate();
     },
     updateCategories(categories) {
       this.categories = categories;
     },
     addSkill(skill, selectedCategory) {
       this.categories[selectedCategory].skills.push(skill);
-      for(let student in this.students) {
-        this.$set(this.students[student].acquired[selectedCategory], skill.id, {
-          acquired: false,
-          image: null,
-          audio: null
-        })
-      }
+      this.$set(this.student.acquired[selectedCategory], skill.id, {
+        acquired: false,
+        image: null,
+        audio: null
+      });
     },
     addCategory(cat) {
       this.categories.push(cat);
-      for(let student in this.students) {
-        this.$set(this.students[student].acquired, cat.id, {})
-      }
+      this.$set(this.student.acquired, cat.id, {});
     }
   }
 };
