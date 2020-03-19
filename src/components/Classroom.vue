@@ -5,13 +5,27 @@
     </button>
     <h1 class="text-center text-white">Classroom</h1>
     <p class="text-center">Click on any student to generate a PDF report for their acquired skills. <br> (You are the first student [ABC] in Student View)</p>
-    <p class="text-center"></p>
+    <form class="row justify-content-center mx-0">
+      <p class="text-center mx-3">Export as:</p>
+      <div class="form-check px-3">
+        <input class="form-check-input" type="radio" id="pdfRadio" value="pdf" v-model="output">
+        <label class="form-check-label" for="pdfRadio">
+          PDF
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="docRadio" value="doc" v-model="output">
+        <label class="form-check-label" for="docRadio">
+          Doc (A little buggy in styling)
+        </label>
+      </div>      
+    </form> 
     <div class="students">
       <div
         class="student"
         v-for="(student, i) in students"
         :key="student.rollNo"
-        @click="generatePDF(i)"
+        @click="generate(i)"
       >
         <img :src="getImage(student.image, 'students')" alt />
         <p class="text-center">{{ student.name }}</p>
@@ -20,11 +34,10 @@
 
     <div class="doc-container">
       <div id="doc" class="mt-2">
-        <div class="profile text-center mx-auto">
+        <div class="profile mx-auto" style="text-align: center">
           <h1 class="mt-5 pt-5">{{ students[selectedStudent].name }}</h1>
           <img
             :src="getImage(students[selectedStudent].image, 'students')"
-            alt
             class="profile-photo d-block mx-auto"
           />
           <h5 class="my-3">Roll Number: {{ students[selectedStudent].rollNo }}</h5>
@@ -37,17 +50,18 @@
         <div class="categories py-3">
           <div class="category my-5" v-for="category in categories" :key="category.id">
             <h1
-              class="text-center my-4 py-2"
+              class="my-4 py-2"
+              style="text-align: center"
               :style="{borderBottom: 'solid 6px ' + category.bg}"
             >{{ category.title }}</h1>
             <div class="skills">
               <div class="skill-item my-3" v-for="skill in category.skills" :key="skill.id">
-                <img :src="getImage(skill.image, 'skills')" alt class="skill-image" />
-                <div class="uploaded w-100">
-                  <div class="row mx-0 w-100" style="border-bottom: solid 2px grey">
+                <img :src="getImage(skill.image, 'skills')" class="skill-image" />
+                <div class="uploaded w-100" style="display: flex; flex-wrap: wrap; align-items: center">
+                  <div class="mx-0 w-100" style="border-bottom: solid 2px grey; display:flex; width: 100%">
                     <h6>{{ skill.title }}</h6>
                     <h5
-                      class="ml-auto"
+                      style="margin-left: auto"
                       :class="{ 'text-success': students[selectedStudent].acquired[category.id][skill.id].acquired, 
                                 'text-danger': !students[selectedStudent].acquired[category.id][skill.id].acquired }"
                     >{{ students[selectedStudent].acquired[category.id][skill.id].acquired ? 'Acquired' : 'Not Acquired' }}</h5>
@@ -77,7 +91,8 @@ export default {
   },
   data() {
     return {
-      selectedStudent: 0
+      selectedStudent: 0,
+      output: 'pdf'
     };
   },
   methods: {
@@ -87,6 +102,49 @@ export default {
       } else {
         return require("@/assets/" + folder + "/" + image);
       }
+    },
+    generate(i) {
+      if(this.output == 'pdf') {
+        this.generatePDF(i);
+      } else {
+        this.generateDoc(i);
+      }
+    },
+    generateDoc(i) {
+      this.selectedStudent = i;
+
+      let vm = this;
+      let filename = "skills-" + this.students[i].name;
+      let element = "doc";
+
+      setTimeout(() => {
+        var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+        var postHtml = "</body></html>";
+        var html = preHtml+document.getElementById(element).innerHTML+postHtml;
+  
+        var blob = new Blob(['\ufeff', html], {
+            type: 'application/msword'
+        });
+        
+        // Specify link url
+        var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+        filename = filename?filename+'.doc':'document.doc';
+        
+        // Create download link element
+        var downloadLink = document.createElement("a");
+        document.body.appendChild(downloadLink);
+        if(navigator.msSaveOrOpenBlob ){
+            navigator.msSaveOrOpenBlob(blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = url;
+            // Setting the file name
+            downloadLink.download = filename;
+            //triggering the function
+            downloadLink.click();
+        }
+        document.body.removeChild(downloadLink);
+      }, 500);
     },
     generatePDF(i) {
       this.selectedStudent = i;
