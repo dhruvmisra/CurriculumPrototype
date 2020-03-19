@@ -1,9 +1,13 @@
 <template>
   <div id="home">
-    <div class="views">
-      <h5>Select View</h5>
-      <button class="btn border" @click="$emit('goTo', 'Student')">Student's view</button>
-      <button class="btn border" @click="$emit('goTo', 'Classroom')">Classroom view</button>
+    <h1 class="text-center text-white py-5">Curriculum Prototype</h1>
+
+    <div class="views-container">
+      <div class="views">
+        <h5>Select View</h5>
+        <button class="btn border" @click="$emit('goTo', 'Student')">Student's view</button>
+        <button class="btn border" @click="$emit('goTo', 'Classroom')">Classroom view</button>
+      </div>
     </div>
   </div>
 </template>
@@ -20,6 +24,9 @@ export default {
   height: 100vh;
   width: 100vw;
   background: rgb(33, 33, 165);
+}
+.views-container {
+  height: 60%;
   display: flex;
   justify-content: center;
   align-items: center;  
