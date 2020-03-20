@@ -58,7 +58,7 @@
             </div>
             <label for="image">Image</label>
             <input
-              id="image"
+              id="image-achieve"
               type="file"
               accept="image/*"
               class="form-control"
@@ -66,7 +66,7 @@
             />
             <label for="audio">Audio</label>
             <input
-              id="audio"
+              id="audio-achieve"
               type="file"
               accept="audio/*"
               capture
@@ -100,7 +100,7 @@
             <input type="text" class="form-control" v-model="skillTitle" placeholder="Title">
             <label for="image">Image</label>
             <input
-              id="image"
+              id="image-skill"
               type="file"
               accept="image/*"
               class="form-control"
@@ -143,6 +143,8 @@ export default {
     category: function(newVal, oldVal) {
       if(typeof newVal.skills[0] != 'undefined') {
         this.selectedSkill = newVal.skills[0].id;
+      } else {
+        this.selectedSkill = 0;
       }
     },
     settingsOpen: function(newVal, oldVal) {
@@ -184,6 +186,7 @@ export default {
           vm.$emit('skillAdded', skillObj);
           vm.skillTitle = '';
           vm.imageFile = null;
+          document.getElementById('image-skill').value = '';
         };
       } else {
         vm.$emit('skillAdded', skillObj);
@@ -214,6 +217,7 @@ export default {
         reader.onload = function () {
           vm.student.acquired[vm.category.id][vm.selectedSkill].image = reader.result;
           vm.imageFile = null;
+          document.getElementById('image-achieve').value = '';
         };
       }
 
@@ -222,6 +226,7 @@ export default {
         // Do something with the audio file.
         vm.student.acquired[vm.category.id][vm.selectedSkill].audio = url;
         vm.audioFile = null;
+        document.getElementById('audio-achieve').value = '';
       }
 
       this.student.acquired[this.category.id][this.selectedSkill].acquired = true;

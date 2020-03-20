@@ -143,7 +143,7 @@ export default {
       this.categories = categories;
     },
     addSkill(skill, selectedCategory) {
-      this.categories[selectedCategory].skills.push(skill);
+      this.categories.find(e => e.id == selectedCategory).skills.push(skill);
       this.$set(this.student.acquired[selectedCategory], skill.id, {
         acquired: false,
         image: null,

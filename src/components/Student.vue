@@ -49,6 +49,9 @@ export default {
       selectedCategory: 0
     };
   },
+  mounted() {
+    this.selectedCategory = this.categories[0].id;
+  },
   methods: {
     updateCategories(categories) {
       this.$emit("updateCategories", categories);

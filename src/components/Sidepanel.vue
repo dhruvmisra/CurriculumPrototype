@@ -3,7 +3,7 @@
     <div class="category-boxes">
       <div
         class="category-box border p-3"
-        :class="{ selected: selectedCategory == i }"
+        :class="{ selected: selectedCategory == category.id }"
         :style="{ background: category.bg }"
         v-for="(category, i) in categories"
         :key="category.title"
