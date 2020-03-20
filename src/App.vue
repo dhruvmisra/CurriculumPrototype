@@ -45,6 +45,7 @@ export default {
           id: 0,
           title: "Category 1",
           bg: '#4AC1F6',
+          icon: 'book',
           skills: [
             {
               id: 0,

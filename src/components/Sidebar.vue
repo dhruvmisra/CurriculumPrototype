@@ -78,7 +78,7 @@ export default {
 
 <style>
 .sidebar {
-  width: 300px;
+  width: 250px;
   height: 100%;
 }
 .item {

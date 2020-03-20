@@ -19,8 +19,8 @@
       <p class="text-center my-0"> <i class="fas fa-folder text-primary" style="font-size: 20px"></i> {{ documents.length }}</p>
       <div class="documents">
         <div class="border" v-for="(doc, i) in documents" :key="i">
-          <img :src="doc" alt="doc" v-if="doc[0] == 'd'" class="w-50">
-          <audio :src="doc" v-if="doc[0] == 'b'" controls class="upload-audio w-50"></audio>
+          <img :src="doc" alt="doc" v-if="doc[0] == 'd'" class="w-100">
+          <audio :src="doc" v-if="doc[0] == 'b'" controls class="upload-audio w-100"></audio>
           <span style="font-size:10px">[Upload Time]</span>
         </div>
       </div>

@@ -141,7 +141,9 @@ export default {
   },
   watch: {
     category: function(newVal, oldVal) {
-      this.selectedSkill = newVal.skills[0].id;
+      if(typeof newVal.skills[0] != 'undefined') {
+        this.selectedSkill = newVal.skills[0].id;
+      }
     },
     settingsOpen: function(newVal, oldVal) {
       this.imageFile = null;
