@@ -244,7 +244,7 @@ export default {
 <style>
 #skills {
   background: #4ac1f6;
-  width: calc(100% - 200px);
+  width: 96%;
   height: 100%;
   overflow-y: auto;
 }

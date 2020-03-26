@@ -1,5 +1,5 @@
 <template>
-  <div class="sidepanel border shadow">
+  <div class="sidepanel border shadow" :class="{ hide: documents.length == 0 }">
     <div class="category-boxes">
       <div
         class="category-box border p-3"
@@ -13,8 +13,8 @@
       </div>
     </div>
 
-    <div class="profile">
-      <img src="../assets/icons/owner-icon.svg" alt="profile-photo" class="profile-photo w-100">
+    <div class="profile" v-if="documents.length != 0">
+      <!-- <img src="../assets/icons/owner-icon.svg" alt="profile-photo" class="profile-photo w-100"> -->
 
       <p class="text-center my-0"> <i class="fas fa-folder text-primary" style="font-size: 20px"></i> {{ documents.length }}</p>
       <div class="documents">
@@ -97,6 +97,9 @@ export default {
 
 .profile {
   width: 100%;
+}
+.hide {
+  width: 60px !important;
 }
 .profile-photo {
   padding: 10px;
